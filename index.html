@@ -2,274 +2,653 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8" />
-<title>A5 書籍 Mockup 設定 (攤平 + 立體展示)</title>
+<title>A5 書籍 Mockup 設定 (攤平展開版)</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-/* ======== UI CSS ======== */
-body { font-family: 'Helvetica Neue', Arial, sans-serif; margin:0; background:#f4f4f6; display:flex; height:100vh; color:#333; overflow:hidden; }
-#app-container { display:flex; width:100%; height:100%; }
-#settings-panel { width:300px; background:#fff; box-shadow:2px 0 10px rgba(0,0,0,0.05); padding:20px; overflow-y:auto; flex-shrink:0; }
-h3 { margin-top:0; color:#1a73e8; border-bottom:1px solid #eee; padding-bottom:10px; font-weight:500; }
-.setting-group { margin-bottom:20px; padding:15px; border:1px solid #e0e0e0; border-radius:8px; background:#fafafa; }
-.setting-group h4 { margin-top:0; font-size:16px; color:#333; border-bottom:1px solid #ddd; padding-bottom:5px; margin-bottom:10px; }
-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:14px; font-weight:500; cursor:pointer; }
-input[type="number"], input[type="text"], select, input[type="color"] { padding:6px; border-radius:4px; border:1px solid #ccc; width:100px; box-sizing:border-box; font-size:14px; }
-input[type="color"] { width:30px; height:30px; padding:0; border:none; background:transparent; }
-input[type="range"] { flex-grow:1; margin-right:10px; }
-.range-label { display:block; width:100%; margin-top:5px; }
-.range-value { width:40px; text-align:right; font-weight:normal; }
-.file-upload-label { background:#e9e9e9; border:1px solid #ccc; padding:8px 12px; border-radius:4px; text-align:center; transition:background 0.2s; flex-grow:1; }
-.file-upload-label:hover { background:#ddd; }
-.upload-row { display:flex; justify-content:space-between; margin-bottom:10px; }
-#actions { display:flex; flex-direction:column; gap:10px; margin-top:20px; padding-top:15px; border-top:1px solid #e0e0e0; }
-button { padding:10px 15px; border-radius:6px; border:none; font-weight:bold; cursor:pointer; transition: background 0.2s, opacity 0.2s; }
-#renderBtn { background:#1a73e8; color:white; } #renderBtn:hover{background:#155bb5;}
-#downloadBtn { background:#00a87f; color:white; } #downloadBtn:hover{background:#008f6b;}
-#wmResetBtn { background:#f0f0f0; color:#333; padding:8px 12px; } #wmResetBtn:hover{background:#e0e0e0;}
-#canvas-container { flex-grow:1; display:flex; justify-content:center; align-items:center; padding:20px; position:relative; overflow:hidden; }
-canvas { display:block; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.1); cursor:grab; background:#f7f7f9; }
+/* UI CSS */
+body { 
+    font-family: 'Helvetica Neue', Arial, sans-serif; 
+    margin: 0; 
+    background: #f4f4f6; 
+    display: flex; 
+    height: 100vh;
+    color: #333;
+    overflow: hidden;
+}
+
+#app-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#settings-panel {
+    width: 300px;
+    background: #fff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+h3 {
+    margin-top: 0;
+    color: #1a73e8;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    font-weight: 500;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.setting-group h4 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+input[type="number"], 
+input[type="text"], 
+select, 
+input[type="color"] {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+input[type="color"] {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+input[type="range"] {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.range-label {
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.range-value {
+    width: 40px;
+    text-align: right;
+    font-weight: normal;
+}
+
+.file-upload-label {
+    background: #e9e9e9;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    transition: background 0.2s;
+    flex-grow: 1;
+}
+
+.file-upload-label:hover {
+    background: #ddd;
+}
+
+.upload-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+#actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+button {
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+}
+
+#renderBtn {
+    background: #1a73e8;
+    color: white;
+}
+#renderBtn:hover { background: #155bb5; }
+
+#downloadBtn {
+    background: #00a87f;
+    color: white;
+}
+#downloadBtn:hover { background: #008f6b; }
+
+#wmResetBtn {
+    background: #f0f0f0;
+    color: #333;
+    padding: 8px 12px;
+}
+#wmResetBtn:hover { background: #e0e0e0; }
+
+
+#canvas-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+canvas { 
+    width: 100%; 
+    height: 100%; 
+    display: block; 
+    border-radius: 8px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+    cursor: grab; 
+    background: #f7f7f9; 
+    max-width: 1000px;
+    max-height: 800px;
+}
 </style>
 </head>
 <body>
+
 <div id="app-container">
-  <div id="settings-panel">
-    <h3>A5 書籍 Mockup 設定</h3>
+    
+    <div id="settings-panel">
+        <h3>A5 書籍 Mockup 設定 (攤平展開版)</h3>
 
-    <div class="setting-group">
-      <h4>📔 圖稿與尺寸設定</h4>
-      <div class="upload-row">
-        <label class="file-upload-label">上傳原圖 (封面+書背+封底)
-          <input id="sourceInput" type="file" accept="image/*,application/pdf" style="display:none">
-        </label>
-      </div>
-      <label><span>書背寬度 (mm)</span><input id="spineWidth" type="number" min="1" max="200" value="11"></label>
-      <label><span>出血 (mm)</span><input id="bleedMM" type="number" min="0" max="50" value="3"></label>
-      <label><span>折口 (mm)</span><input id="foldMM" type="number" min="0" max="20" value="3"></label>
-      <label><span>翻書方向</span>
-        <select id="bookDir">
-          <option value="L">左翻書</option>
-          <option value="R">右翻書</option>
-        </select>
-      </label>
+        <div class="setting-group">
+            <h4>📔 圖稿與尺寸設定</h4>
+            
+            <div class="upload-row">
+                <label class="file-upload-label">上傳封面展開圖 (封底 | 書脊 | 封面)<input id="combinedInput" type="file" accept="image/*" style="display:none"></label>
+            </div>
+            
+            <p style="font-size:12px; color:#555; margin-top:0;">* 模型將顯示 A5 垂直尺寸 (148 x 210 mm) 的視覺內容。</p>
+
+            <label>
+                <span>書脊寬度 (mm)</span>
+                <input id="spineWidth" type="number" min="1" max="200" value="11">
+            </label>
+            <label>
+                <span>出血數值 (mm)</span>
+                <input id="bleedMM" type="number" min="0" max="50" value="3">
+            </label>
+            <label>
+                <span>翻書方向</span>
+                <select id="bookDir">
+                    <option value="L">左翻書</option>
+                    <option value="R">右翻書</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="setting-group">
+            <h4>✨ 表面效果</h4>
+            <label>
+                <span>上光/霧膜</span>
+                <select id="finishType">
+                    <option value="none">None</option>
+                    <option value="glossy">Glossy (光面)</option>
+                    <option value="matte">Matte (霧面)</option>
+                </select>
+            </label>
+            <label>
+                <span>啟用上光效果</span>
+                <input type="checkbox" id="finishEnable" checked>
+            </label>
+        </div>
+
+        <div class="setting-group">
+            <h4>💧 浮水印 (貼於展開平面)</h4>
+            <div class="upload-row">
+                <label class="file-upload-label">上傳浮水印<input id="watermarkInput" type="file" accept="image/*" style="display:none"></label>
+            </div>
+            <label>
+                <span>顯示浮水印</span>
+                <input type="checkbox" id="wmEnable" checked>
+            </label>
+
+            <label class="range-label">
+                <span>浮水印透明度</span>
+                <input id="wmOpacity" type="range" min="0" max="1" step="0.01" value="0.3">
+                <span class="range-value" id="wmOpacityValue">0.3</span>
+            </label>
+
+            <label class="range-label">
+                <span>浮水印縮放</span>
+                <input id="wmScale" type="range" min="0.1" max="3" step="0.01" value="1">
+                <span class="range-value" id="wmScaleValue">1</span>
+            </label>
+
+            <label class="range-label">
+                <span>浮水印旋轉</span>
+                <input id="wmRotate" type="range" min="0" max="360" step="1" value="0">
+                <span class="range-value" id="wmRotateValue">0°</span>
+            </label>
+
+            <button id="wmResetBtn">浮水印回中心/重置大小</button>
+        </div>
+
+        <div class="setting-group">
+            <h4>🖼️ 背景設定</h4>
+            <label>
+                <span>背景顏色</span>
+                <input type="color" id="bgColor" value="#f4f4f6">
+            </label>
+            <div class="upload-row">
+                <label class="file-upload-label">自訂背景圖片<input id="bgImageInput" type="file" accept="image/*" style="display:none"></label>
+            </div>
+            <label>
+                <span>透明背景 (PNG)</span>
+                <input type="checkbox" id="transparentBg">
+            </label>
+        </div>
+
+        <div id="actions">
+            <label>
+                <span>書名 (作為檔名)</span>
+                <input type="text" id="bookTitle" placeholder="輸入書名">
+            </label>
+            <button id="renderBtn">重新渲染 🔃</button>
+            <button id="downloadBtn">下載 PNG 💾</button>
+        </div>
+
     </div>
 
-    <div class="setting-group">
-      <h4>✨ 表面效果</h4>
-      <label><span>上光/霧膜</span>
-        <select id="finishType">
-          <option value="none">None</option>
-          <option value="glossy">Glossy (光面)</option>
-          <option value="matte">Matte (霧面)</option>
-        </select>
-      </label>
-      <label><span>啟用上光效果</span><input type="checkbox" id="finishEnable" checked></label>
+    <div id="canvas-container">
+        <canvas id="cvs"></canvas>
     </div>
-
-    <div class="setting-group">
-      <h4>💧 浮水印</h4>
-      <div class="upload-row">
-        <label class="file-upload-label">上傳浮水印<input id="watermarkInput" type="file" accept="image/*" style="display:none"></label>
-      </div>
-      <label><span>顯示浮水印</span><input type="checkbox" id="wmEnable" checked></label>
-      <label class="range-label"><span>透明度</span><input id="wmOpacity" type="range" min="0" max="1" step="0.01" value="0.3"><span class="range-value" id="wmOpacityValue">0.3</span></label>
-      <label class="range-label"><span>縮放</span><input id="wmScale" type="range" min="0.1" max="3" step="0.01" value="1"><span class="range-value" id="wmScaleValue">1</span></label>
-      <label class="range-label"><span>旋轉</span><input id="wmRotate" type="range" min="0" max="360" step="1" value="0"><span class="range-value" id="wmRotateValue">0°</span></label>
-      <button id="wmResetBtn">浮水印回中心/重置大小</button>
-    </div>
-
-    <div class="setting-group">
-      <h4>🖼 背景設定</h4>
-      <label><span>背景顏色</span><input type="color" id="bgColor" value="#f4f4f6"></label>
-      <div class="upload-row">
-        <label class="file-upload-label">自訂背景圖片<input id="bgImageInput" type="file" accept="image/*" style="display:none"></label>
-      </div>
-      <label><span>透明背景 (PNG)</span><input type="checkbox" id="transparentBg"></label>
-    </div>
-
-    <div id="actions">
-      <label><span>書名 (作為檔名)</span><input type="text" id="bookTitle" placeholder="輸入書名"></label>
-      <button id="renderBtn">重新渲染 🔃</button>
-      <button id="downloadBtn">下載 PNG 💾</button>
-    </div>
-  </div>
-
-  <div id="canvas-container">
-    <canvas id="cvs"></canvas>
-  </div>
 </div>
 
 <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script src="https://unpkg.com/pdfjs-dist/build/pdf.min.js"></script>
 <script>
-// ======= THREE.JS + PDF/圖檔處理 =======
+// --- THREE.JS SETUP ---
 
 const canvas = document.getElementById('cvs');
-const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer:true, antialias:true, alpha:true });
+const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true, antialias: true, alpha: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 const container = document.getElementById('canvas-container');
+const initialWidth = container.clientWidth;
+const initialHeight = container.clientHeight;
+renderer.setSize(initialWidth || 1200, initialHeight || 800, false); 
 
-// ==== A5 300dpi 像素計算 ====
-const MM_TO_IN = 25.4;
-const DPI = 300;
-const A5_W_MM = 148, A5_H_MM = 210;
-let A5_W_PX = Math.round(A5_W_MM/MM_TO_IN*DPI);
-let A5_H_PX = Math.round(A5_H_MM/MM_TO_IN*DPI);
-
-canvas.width = A5_W_PX*2 + 600; // 攤平+立體區域預留
-canvas.height = A5_H_PX*2; 
-renderer.setSize(canvas.width, canvas.height, false);
+renderer.shadowMap.enabled = true; 
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(document.getElementById('bgColor').value);
 
-// 相機
-const camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 0.1, 5000);
-camera.position.set(0, 400, 600); // 拉遠
-camera.lookAt(0,0,0);
+const camera = new THREE.PerspectiveCamera(45, (initialWidth || 1200) / (initialHeight || 800), 0.1, 1000);
 
-// 光源：環境光 + 正面光
-const hemi = new THREE.HemisphereLight(0xffffff,0x444444,1.0);
+// *** V6.5 修正: 調整攝影機位置，將 Z 軸距離拉到 200，確保畫面能完整顯示攤開的書本 ***
+camera.position.set(0, 80, 200); // 關鍵修正：將 Z 軸距離拉遠到 200
+camera.lookAt(0, 0, 0);
+
+// 光源設置 (保持高品質光影)
+const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0); 
+hemi.position.set(0, 50, 0); 
 scene.add(hemi);
-const dir = new THREE.DirectionalLight(0xffffff,1.2);
-dir.position.set(0,300,300);
+
+const dir = new THREE.DirectionalLight(0xffffff, 1.2); 
+dir.position.set(100, 100, 100); 
+dir.castShadow = true; 
+dir.shadow.mapSize.width = 1024;
+dir.shadow.mapSize.height = 1024;
+dir.shadow.camera.near = 0.5;
+dir.shadow.camera.far = 500;
+dir.shadow.camera.left = -100;
+dir.shadow.camera.right = 100;
+dir.shadow.camera.top = 100;
+dir.shadow.camera.bottom = -100;
 scene.add(dir);
 
-const bookGroup = new THREE.Group();
-scene.add(bookGroup);
+const fillLight = new THREE.DirectionalLight(0xeeeeff, 0.4); 
+fillLight.position.set(-50, 50, -50); 
+scene.add(fillLight);
 
+// 地面 (接收陰影)
+const floorGeo = new THREE.PlaneGeometry(400, 400);
+const floorMat = new THREE.MeshPhongMaterial({ color: 0xf4f4f6 }); 
+const floor = new THREE.Mesh(floorGeo, floorMat);
+floor.rotation.x = -Math.PI / 2; 
+const heightUnit = 72; // A5 高度 (210mm) 的 Three.js 單位
+// 調整地面高度，讓書本平鋪在它上方
+floor.position.y = -(heightUnit / 2) - 1 - 20; 
+floor.receiveShadow = true; 
+scene.add(floor);
+
+
+const bookGroup = new THREE.Group(); scene.add(bookGroup);
 const loader = new THREE.TextureLoader();
-let mainTex=null, wmTex=null, bgTex=null;
-let watermarkMesh=null, wmOpacity=0.3, wmScale=1, wmRotate=0;
 
-function getSettings(){
-  return {
-    spineWidth:Number(document.getElementById('spineWidth').value),
-    bleedMM:Number(document.getElementById('bleedMM').value),
-    foldMM:Number(document.getElementById('foldMM').value),
-    bookDir:document.getElementById('bookDir').value,
-    finishType:document.getElementById('finishType').value,
-    finishEnable:document.getElementById('finishEnable').checked,
-    wmEnable:document.getElementById('wmEnable').checked
-  };
+let mainTex = null, wmTex = null, bgTex = null;
+let wmOpacity = Number(document.getElementById('wmOpacity').value);
+let wmScale = Number(document.getElementById('wmScale').value);
+let wmRotate = Number(document.getElementById('wmRotate').value);
+
+let watermarkMesh = null;
+let isDragging = false;
+let dragOffset = { x: 0, y: 0 };
+
+function getSettings() {
+    return {
+        spineWidth: Number(document.getElementById('spineWidth').value),
+        bleedMM: Number(document.getElementById('bleedMM').value),
+        bookDir: document.getElementById('bookDir').value, // 在此模式下被忽略
+        finishType: document.getElementById('finishType').value,
+        wmEnable: document.getElementById('wmEnable').checked,
+        finishEnable: document.getElementById('finishEnable').checked
+    };
 }
 
-// 生成書皮與立體展示
-function buildBook(){
-  const {spineWidth, bleedMM, foldMM, bookDir, finishType, finishEnable, wmEnable} = getSettings();
-  while(bookGroup.children.length) bookGroup.remove(bookGroup.children[0]);
+function buildBook() {
+    const { spineWidth, bleedMM, finishType, wmEnable, finishEnable } = getSettings();
+    const A5_W_MM = 148;
+    const A5_H_MM = 210;
+    const W_A5_UNIT = 48;
+    const H_UNIT = 72; 
+    
+    // 1. 核心模型尺寸計算 (基於 A5 比例)
+    const W_SPINE_UNIT = (spineWidth / A5_W_MM) * W_A5_UNIT;
+    const W_TOTAL_UNIT = W_A5_UNIT * 2 + W_SPINE_UNIT; // 封底 + 書脊 + 封面
 
-  if(!mainTex) return;
+    while (bookGroup.children.length) bookGroup.remove(bookGroup.children[0]);
+    scene.children.filter(c => c.name === 'bgPlane').forEach(p => scene.remove(p));
 
-  const bleedPx = bleedMM/MM_TO_IN*DPI;
-  const foldPx = foldMM/MM_TO_IN*DPI;
-  const spinePx = spineWidth/MM_TO_IN*DPI;
-
-  // 切割圖片成五區塊：左折口、左頁、書背、右頁、右折口
-  const imgW = mainTex.image.width;
-  const imgH = mainTex.image.height;
-  const leftFoldW = foldPx/imgW;
-  const rightFoldW = foldPx/imgW;
-  const spineW = spinePx/imgW;
-  const contentW = (imgW - spinePx - foldMM*2)/2 / imgW;
-
-  const uvs = [
-    {u:0, w:leftFoldW}, // 左折口
-    {u:leftFoldW, w:contentW}, // 左頁
-    {u:leftFoldW+contentW, w:spineW/imgW}, // 書背
-    {u:leftFoldW+contentW+spineW/imgW, w:contentW}, // 右頁
-    {u:1-rightFoldW, w:rightFoldW} // 右折口
-  ];
-
-  const meshes = [];
-  const H = A5_H_PX;
-
-  for(let i=0;i<5;i++){
-    const geo = new THREE.PlaneGeometry(uvs[i].w*A5_W_PX*2, H);
-    const mat = new THREE.MeshPhongMaterial({ map: mainTex, side:THREE.DoubleSide });
-    const mesh = new THREE.Mesh(geo,mat);
-    mesh.position.x = (i-2)*A5_W_PX;
-    meshes.push(mesh);
-    bookGroup.add(mesh);
-  }
-
-  // 浮水印
-  if(wmTex && wmEnable){
-    if(watermarkMesh) bookGroup.remove(watermarkMesh);
-    const wmGeo = new THREE.PlaneGeometry(wmTex.image.width/4, wmTex.image.height/4);
-    const wmMat = new THREE.MeshBasicMaterial({ map: wmTex, transparent:true, opacity:wmOpacity });
-    watermarkMesh = new THREE.Mesh(wmGeo,wmMat);
-    watermarkMesh.position.set(0,0,0.1);
-    watermarkMesh.scale.set(wmScale,wmScale,1);
-    watermarkMesh.rotation.z = THREE.MathUtils.degToRad(wmRotate);
-    bookGroup.add(watermarkMesh);
-  }
-}
-
-// ====== 上傳事件 ======
-document.getElementById('sourceInput').addEventListener('change', async e=>{
-  const file = e.target.files[0]; if(!file) return;
-
-  if(file.type==="application/pdf"){
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({data:arrayBuffer}).promise;
-    const page = await pdf.getPage(1);
-    const viewport = page.getViewport({scale:2});
-    const tmpCanvas = document.createElement('canvas');
-    tmpCanvas.width = viewport.width;
-    tmpCanvas.height = viewport.height;
-    await page.render({canvasContext:tmpCanvas.getContext('2d'), viewport:viewport}).promise;
-    mainTex = new THREE.CanvasTexture(tmpCanvas);
-  } else {
-    mainTex = loader.load(URL.createObjectURL(file), ()=>buildBook());
-  }
-  buildBook();
-});
-
-document.getElementById('watermarkInput').addEventListener('change',e=>{
-  const file = e.target.files[0]; if(!file) return;
-  wmTex = loader.load(URL.createObjectURL(file),()=>buildBook());
-});
-
-// ====== 參數事件 ======
-['spineWidth','bleedMM','foldMM','bookDir','finishType','finishEnable','wmEnable','renderBtn'].forEach(id=>{
-  document.getElementById(id).addEventListener('input',()=>buildBook());
-});
-['wmOpacity','wmScale','wmRotate'].forEach(id=>{
-  document.getElementById(id).addEventListener('input', e=>{
-    if(id==='wmOpacity') { wmOpacity=Number(e.target.value); document.getElementById('wmOpacityValue').textContent=wmOpacity.toFixed(2);}
-    if(id==='wmScale') { wmScale=Number(e.target.value); document.getElementById('wmScaleValue').textContent=wmScale.toFixed(2);}
-    if(id==='wmRotate') { wmRotate=Number(e.target.value); document.getElementById('wmRotateValue').textContent=wmRotate+'°';}
-    if(watermarkMesh){
-      watermarkMesh.material.opacity = wmOpacity;
-      watermarkMesh.scale.set(wmScale,wmScale,1);
-      watermarkMesh.rotation.z = THREE.MathUtils.degToRad(wmRotate);
+    // 背景邏輯 (與 V5 相同)
+    if (!document.getElementById('transparentBg').checked) {
+        scene.children.filter(c => c.name === 'bgPlane').forEach(p => scene.remove(p)); 
+        if (bgTex) {
+            floor.material.color = new THREE.Color(0xffffff);
+            scene.background = new THREE.Color(0x000000); 
+            
+            const bgGeo = new THREE.PlaneGeometry(400, 400);
+            const bgMat = new THREE.MeshBasicMaterial({ map: bgTex });
+            const bgPlane = new THREE.Mesh(bgGeo, bgMat);
+            bgPlane.position.z = -100;
+            bgPlane.name = 'bgPlane'; 
+            scene.add(bgPlane);
+        } else {
+            const bgColorValue = document.getElementById('bgColor').value;
+            scene.background = new THREE.Color(bgColorValue);
+            floor.material.color = scene.background;
+        }
+    } else {
+        scene.background = null;
+        floor.material.color = new THREE.Color(0x000000); 
     }
-  });
-});
 
-// ====== 下載 ======
-document.getElementById('downloadBtn').addEventListener('click',()=>{
-  renderer.render(scene,camera);
-  const title = document.getElementById('bookTitle').value.trim()||'book-mockup';
-  const a = document.createElement('a');
-  a.href = renderer.domElement.toDataURL('image/png');
-  a.download = `${title}.png`;
-  a.click();
-});
+    // --- 核心模型：創建一個單一平面 (攤平展開) ---
+    const spreadGeo = new THREE.PlaneGeometry(W_TOTAL_UNIT, H_UNIT); 
+    let spreadTex = null;
 
-// ====== 動畫渲染 ======
-function animate(){requestAnimationFrame(animate); renderer.render(scene,camera);}
+    if (mainTex) {
+        // --- 核心出血裁切計算 (適用於攤平貼圖) ---
+        
+        // 內容尺寸 (不含出血)
+        const W_Content_MM = A5_W_MM * 2 + spineWidth; 
+        const H_Content_MM = A5_H_MM;
+        // 圖稿總尺寸 (包含出血)
+        const W_Total_MM = W_Content_MM + 2 * bleedMM;
+        const H_Total_MM = H_Content_MM + 2 * bleedMM;
+        
+        if (W_Total_MM <= 0 || H_Total_MM <= 0) {
+            console.error("尺寸計算錯誤：總寬度或總高度為零或負數。請檢查書脊寬度和出血數值是否合理。");
+            mainTex = null; 
+            return;
+        }
+        
+        // 歸一化比例 (0 到 1)
+        const N_Bleed_W = bleedMM / W_Total_MM;
+        const N_Content_W = W_Content_MM / W_Total_MM; 
+        const N_Bleed_H = bleedMM / H_Total_MM;
+        const N_Content_H = H_Content_MM / H_Total_MM; 
+        
+        spreadTex = mainTex.clone();
+        spreadTex.minFilter = THREE.LinearFilter;
+        spreadTex.magFilter = THREE.LinearFilter;
+        spreadTex.wrapS = THREE.ClampToEdgeWrapping;
+        spreadTex.wrapT = THREE.ClampToEdgeWrapping;
+        
+        // Offset: 從左側和底部的出血邊緣開始
+        spreadTex.offset.set(N_Bleed_W, N_Bleed_H); 
+        // Repeat: 總內容 (封底+書脊+封面) 佔據的比例
+        spreadTex.repeat.set(N_Content_W, N_Content_H); 
+        spreadTex.needsUpdate = true;
+    }
+
+    const spreadMaterial = new THREE.MeshPhongMaterial({ 
+        map: spreadTex, 
+        color: spreadTex ? 0xffffff : 0x2196F3, // 沒圖時顯示藍色
+        side: THREE.DoubleSide 
+    });
+    
+    // 表面效果 (光油/霧膜)
+    if (finishEnable) {
+        if (finishType === 'glossy') { spreadMaterial.shininess = 100; spreadMaterial.specular = new THREE.Color(0xffffff); }
+        else if (finishType === 'matte') { spreadMaterial.shininess = 0; }
+    }
+    
+    const spreadMesh = new THREE.Mesh(spreadGeo, spreadMaterial);
+    spreadMesh.castShadow = true; 
+    spreadMesh.receiveShadow = true;
+    
+    // --- 旋轉角度 (攤平效果 - 接近俯視 45 度角) ---
+    // 沿 X 軸向下翻轉，讓書本平躺 (略微抬起)
+    bookGroup.rotation.x = -Math.PI / 2 * 0.9; 
+    // 略微旋轉 Y 軸，增加視覺效果 (像圖二)
+    bookGroup.rotation.y = THREE.MathUtils.degToRad(-15); 
+    bookGroup.rotation.z = 0; 
+    
+    bookGroup.add(spreadMesh);
+
+    // --- 浮水印邏輯 ---
+    if (wmTex && wmEnable) {
+        if (watermarkMesh) bookGroup.remove(watermarkMesh);
+        
+        // 調整浮水印尺寸，這裡的 10 是一個比例係數
+        const wmWidth = wmTex.image.width / 10;
+        const wmHeight = wmTex.image.height / 10;
+        const wmGeo = new THREE.PlaneGeometry(wmWidth, wmHeight);
+        
+        const wmMat = new THREE.MeshBasicMaterial({ map: wmTex, transparent: true, opacity: wmOpacity });
+        watermarkMesh = new THREE.Mesh(wmGeo, wmMat);
+        
+        // 浮水印貼在攤開的書本正中央，稍微抬高
+        watermarkMesh.position.set(0, 0, 0.1); 
+        watermarkMesh.rotation.y = 0; 
+
+        watermarkMesh.scale.set(wmScale, wmScale, 1);
+        watermarkMesh.rotation.z += THREE.MathUtils.degToRad(wmRotate);
+        bookGroup.add(watermarkMesh);
+    } else { 
+        if (watermarkMesh) bookGroup.remove(watermarkMesh); 
+        watermarkMesh = null; 
+    }
+}
+
+// --- INITIALIZATION AND ANIMATION ---
+
+buildBook();
+function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
 animate();
 
-// ====== 浮水印拖曳 ======
-let isDragging=false, dragOffset={x:0,y:0};
-canvas.addEventListener('mousedown', e=>{if(!watermarkMesh)return; isDragging=true; const rect=canvas.getBoundingClientRect(); dragOffset.x=(e.clientX-rect.left)/rect.width; dragOffset.y=(e.clientY-rect.top)/rect.height; canvas.style.cursor='grabbing';});
-canvas.addEventListener('mousemove', e=>{if(isDragging&&watermarkMesh){const rect=canvas.getBoundingClientRect(); const dx=(e.clientX-rect.left)/rect.width-dragOffset.x; const dy=(e.clientY-rect.top)/rect.height-dragOffset.y; watermarkMesh.position.x+=dx*A5_W_PX*2; watermarkMesh.position.y-=dy*A5_H_PX; dragOffset.x=(e.clientX-rect.left)/rect.width; dragOffset.y=(e.clientY-rect.top)/rect.height;}});
-canvas.addEventListener('mouseup',()=>{isDragging=false;canvas.style.cursor='grab';});
-canvas.addEventListener('mouseleave',()=>{isDragging=false;canvas.style.cursor='grab';});
+// --- EVENT HANDLERS ---
+function initEventListeners() {
+    
+    // 核心上傳事件：與 V5 相同
+    document.getElementById('combinedInput').addEventListener('change', e => { 
+        const file = e.target.files[0]; 
+        if (!file) return; 
+        
+        loader.load(URL.createObjectURL(file), (texture) => {
+            console.log("Texture loaded successfully. Starting build..."); 
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+            mainTex = texture; 
+            buildBook();
+        }, undefined, (error) => {
+            console.error("Texture loading failed:", error); 
+        }); 
+    });
+    
+    // 渲染相關參數
+    document.getElementById('bleedMM').addEventListener('input', () => buildBook());
+    document.getElementById('spineWidth').addEventListener('input', () => buildBook());
+    document.getElementById('bookDir').addEventListener('change', () => buildBook()); 
 
-// ====== 視窗調整 ======
-window.addEventListener('resize',()=>{const w=container.clientWidth; const h=container.clientHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();});
+    document.getElementById('watermarkInput').addEventListener('change', e => { const file = e.target.files[0]; if (!file) return; wmTex = loader.load(URL.createObjectURL(file), () => buildBook()); });
+    document.getElementById('bgImageInput').addEventListener('change', e => { const file = e.target.files[0]; if (!file) return; bgTex = loader.load(URL.createObjectURL(file), () => buildBook()); });
+
+    document.getElementById('finishType').addEventListener('change', () => buildBook());
+    document.getElementById('wmEnable').addEventListener('change', () => buildBook());
+    document.getElementById('finishEnable').addEventListener('change', () => buildBook());
+    document.getElementById('transparentBg').addEventListener('change', () => buildBook());
+    document.getElementById('renderBtn').addEventListener('click', () => buildBook());
+
+    document.getElementById('bgColor').addEventListener('input', e => { 
+        if (!bgTex && !document.getElementById('transparentBg').checked) {
+             scene.background = new THREE.Color(e.target.value); 
+             floor.material.color = scene.background; 
+        }
+    });
+
+    const wmOpacityInput = document.getElementById('wmOpacity');
+    const wmScaleInput = document.getElementById('wmScale');
+    const wmRotateInput = document.getElementById('wmRotate');
+
+    // Range Input 數值同步
+    wmOpacityInput.addEventListener('input', e => { 
+        wmOpacity = Number(e.target.value); 
+        document.getElementById('wmOpacityValue').textContent = wmOpacity.toFixed(2);
+        if (watermarkMesh) watermarkMesh.material.opacity = wmOpacity; 
+    });
+    wmScaleInput.addEventListener('input', e => { 
+        wmScale = Number(e.target.value); 
+        document.getElementById('wmScaleValue').textContent = wmScale.toFixed(2);
+        if (watermarkMesh) watermarkMesh.scale.set(wmScale, wmScale, 1); 
+    });
+    wmRotateInput.addEventListener('input', e => { 
+        wmRotate = Number(e.target.value); 
+        document.getElementById('wmRotateValue').textContent = wmRotate + '°';
+        if (watermarkMesh) {
+            watermarkMesh.rotation.z = THREE.MathUtils.degToRad(wmRotate);
+            // 由於攤平，Y 軸旋轉固定為 0
+            watermarkMesh.rotation.y = 0; 
+        }
+    });
+
+    document.getElementById('wmResetBtn').addEventListener('click', () => {
+        if (watermarkMesh) {
+            // 攤平模式下，重置位置為 (0, 0, 0.1)
+            watermarkMesh.position.set(0, 0, 0.1); 
+            
+            wmScale = 1;
+            wmRotate = 0;
+            
+            wmScaleInput.value = wmScale;
+            wmRotateInput.value = wmRotate;
+            document.getElementById('wmScaleValue').textContent = wmScale.toFixed(2);
+            document.getElementById('wmRotateValue').textContent = wmRotate + '°';
+            
+            watermarkMesh.scale.set(wmScale, wmScale, 1);
+            watermarkMesh.rotation.z = 0;
+            watermarkMesh.rotation.y = 0; 
+        }
+    });
+
+    // --- 下載按鈕邏輯 ---
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+        renderer.render(scene, camera); 
+        const bookTitle = document.getElementById('bookTitle').value.trim() || 'book-mockup';
+        const a = document.createElement('a');
+        a.href = renderer.domElement.toDataURL('image/png');
+        a.download = `${bookTitle}.png`;
+        a.click();
+    });
+
+    // 浮水印拖曳邏輯 
+    canvas.addEventListener('mousedown', e => {
+        if (!watermarkMesh) return;
+        isDragging = true;
+        const rect = canvas.getBoundingClientRect();
+        
+        dragOffset.x = (e.clientX - rect.left) / rect.width;
+        dragOffset.y = (e.clientY - rect.top) / rect.height; 
+        canvas.style.cursor = 'grabbing';
+    });
+
+    canvas.addEventListener('mousemove', e => {
+        if (isDragging && watermarkMesh) {
+            const rect = canvas.getBoundingClientRect();
+            const ratioX = (e.clientX - rect.left) / rect.width;
+            const ratioY = (e.clientY - rect.top) / rect.height;
+            
+            // 調整靈敏度
+            const dx = (ratioX - dragOffset.x) * 100; 
+            const dy = (ratioY - dragOffset.y) * 100;
+
+            watermarkMesh.position.x += dx * 0.2;
+            watermarkMesh.position.y -= dy * 0.2; 
+            
+            dragOffset.x = ratioX;
+            dragOffset.y = ratioY;
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => { isDragging = false; canvas.style.cursor = 'grab'; });
+    canvas.addEventListener('mouseleave', () => { isDragging = false; canvas.style.cursor = 'grab'; });
+
+    // 響應式佈局
+    window.addEventListener('resize', () => { 
+        const container = document.getElementById('canvas-container');
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+}
+
+initEventListeners();
 </script>
 </body>
 </html>
